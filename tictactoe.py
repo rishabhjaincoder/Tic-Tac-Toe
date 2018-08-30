@@ -42,12 +42,37 @@ class Board():
 	def reset(self):
 		self.cells = [" "," "," "," "," "," "," "," "," "," "]
 
+	import random
 	def ai_move(self,player):
 		# Choose random
-		for i in range(1,10):
-			if self.cells[i]==" ":
-				self.update_cell(i,player)
+		while(True):
+
+			# Simply iterates over the list and 
+			# checks if the grid is full or not
+			grid_full = True
+			for i in self.cells:
+				if i!=" ":
+					grid_full = False
+
+			# If the grid is full, it breaks out of while
+			if grid_full:
 				break
+			# Get a random number
+			r = random.randint(1, 9)
+			# Check if its empty
+			if self.cells[r] != " ":
+				# If it is, reiterate the loop and look for another
+				continue
+			else:
+				# If it is not, update the board
+				self.update_cell(r, player)
+				break
+
+		# Sequential stuff, not needed
+		# for i in range(1,10):
+		# 	if self.cells[i]==" ":
+		# 		self.update_cell(i,player)
+		# 		break
 
 board = Board()
 
@@ -56,7 +81,15 @@ def print_header():                                    # prints header
 
 def refresh_screen():                                  # refresh screen function
 	# clear the screen
-	os.system("cls")
+	# Different OS use different commands so the if statement
+	# https://stackoverflow.com/questions/1325581/how-do-i-check-if-im-running-on-windows-in-python
+	if os.name == 'nt':
+		# It is running on windows
+		os.system("cls")
+	else:
+		# It is running on linux, most probably
+		# Could also check for Mac
+		os.system("clear")
 
 	# print the header
 	print_header()
@@ -67,8 +100,19 @@ def refresh_screen():                                  # refresh screen function
 while True:
 	refresh_screen()
 
-	# getting X input 
-	x_choice = int(input("\nX) Please choose 1 - 9. >"))
+	# Adding code to solve the problem when user enter a number already occupied
+	x_choice = -1
+	while(True):
+		# getting X input 
+		x_choice = int(input("\nX) Please choose 1 - 9. >"))
+
+		if board.cells[x_choice] == " ":
+			# cell at x_choice is empty
+			break
+		else:
+			# cell at x_choice is not empty
+			print("Cell already occupied, please choose another number")
+			continue
 
 	# update board
 	board.update_cell(x_choice,"X")
